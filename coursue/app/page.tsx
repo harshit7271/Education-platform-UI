@@ -188,7 +188,7 @@ export default function Home() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 md:flex pt-16 md:pt-0 overflow-hidden h-screen">
+      <main className="flex-1 md:flex pt-16 md:pt-0 md:overflow-hidden md:h-screen">
         {renderContent()}
       </main>
 

@@ -48,7 +48,7 @@ export default function TaskContent({ isLoggedIn, onAuthRequired }: TaskContentP
     };
 
     return (
-        <div className="flex-1 min-h-screen bg-[#F5F5F7] p-4 md:p-8 overflow-x-auto dark:bg-gray-900 transition-colors">
+        <div className="flex-1 min-h-screen bg-[#F5F5F7] p-4 md:p-8 overflow-y-auto overflow-x-hidden dark:bg-gray-900 transition-colors">
             <AddTaskModal
                 isOpen={isAddModalOpen}
                 onClose={() => setIsAddModalOpen(false)}
@@ -69,9 +69,9 @@ export default function TaskContent({ isLoggedIn, onAuthRequired }: TaskContentP
                 </button>
             </div>
 
-            <div className="flex gap-6 min-w-[800px]">
+            <div className="flex flex-col md:flex-row gap-6">
                 {/* To Do Column */}
-                <div className="flex-1 min-w-[300px]">
+                <div className="flex-1">
                     <div className="flex items-center justify-between mb-4 px-2">
                         <h3 className="font-bold text-gray-500 uppercase text-xs tracking-wider flex items-center gap-2 dark:text-gray-400">
                             <div className="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500" />
@@ -121,7 +121,7 @@ export default function TaskContent({ isLoggedIn, onAuthRequired }: TaskContentP
                 </div>
 
                 {/* In Progress Column */}
-                <div className="flex-1 min-w-[300px]">
+                <div className="flex-1">
                     <div className="flex items-center justify-between mb-4 px-2">
                         <h3 className="font-bold text-[#6C5DD3] uppercase text-xs tracking-wider flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-[#6C5DD3]" />

@@ -214,6 +214,50 @@ export default function DashboardContent({ activeTab, onJoinClick, onDashboardCl
                     ))}
                 </div>
             </div>
+
+            {/* Mobile-only Stats and Mentors (from RightSidebar) */}
+            <div className="mt-12 xl:hidden space-y-10">
+                <div className="bg-white rounded-[2rem] p-6 shadow-sm dark:bg-gray-800 min-w-0">
+                    <h3 className="text-xl font-bold mb-6 dark:text-white">Daily Activity</h3>
+                    <div className="h-[200px] w-full min-w-0">
+                        {/* Note: In a real app we'd share a component, but here we can just add a placeholder or simple bars */}
+                        <div className="flex items-end justify-between h-full gap-2 px-2">
+                            {[40, 70, 45, 90, 65, 50, 80].map((h, i) => (
+                                <div key={i} className="flex-1 flex flex-col items-center gap-2">
+                                    <div
+                                        style={{ height: `${h}%` }}
+                                        className={clsx(
+                                            "w-full rounded-t-lg transition-all",
+                                            i === 3 ? "bg-green-400" : "bg-[#6C5DD3]/20 dark:bg-gray-700"
+                                        )}
+                                    />
+                                    <span className="text-[10px] font-bold text-gray-400">
+                                        {['M', 'T', 'W', 'T', 'F', 'S', 'S'][i]}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="pb-10">
+                    <h3 className="text-xl font-bold mb-6 dark:text-white">Your Mentors</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {[
+                            { name: "Jason Ranti", role: "UI/UX Designer", avatar: "https://i.pravatar.cc/150?u=jason" },
+                            { name: "Angelina Lee", role: "Product Manager", avatar: "https://i.pravatar.cc/150?u=angelina" }
+                        ].map((m) => (
+                            <div key={m.name} className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm dark:bg-gray-800">
+                                <img src={m.avatar} className="w-12 h-12 rounded-full object-cover" />
+                                <div>
+                                    <p className="font-bold text-gray-900 dark:text-white">{m.name}</p>
+                                    <p className="text-xs text-gray-400">{m.role}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

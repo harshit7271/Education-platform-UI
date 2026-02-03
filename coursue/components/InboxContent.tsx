@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Edit, Phone, Video, MoreVertical, Paperclip, Send, Mic, Image as ImageIcon } from "lucide-react";
+import { Search, Edit, Phone, Video, MoreVertical, Paperclip, Send, Mic, Image as ImageIcon, ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import clsx from "clsx";
 
@@ -19,11 +19,20 @@ const MESSAGES = [
 
 export default function InboxContent() {
     const [activeChat, setActiveChat] = useState(CONVERSATIONS[0].id);
+    const [view, setView] = useState<"list" | "chat">("list");
+
+    const handleChatSelect = (id: number) => {
+        setActiveChat(id);
+        setView("chat");
+    };
 
     return (
-        <div className="flex-1 h-screen bg-[#F5F5F7] p-4 md:p-6 flex gap-6 overflow-hidden dark:bg-gray-900 transition-colors">
+        <div className="flex-1 h-screen bg-[#F5F5F7] p-4 md:p-6 flex flex-col md:flex-row gap-6 overflow-hidden dark:bg-gray-900 transition-colors">
             {/* List Panel */}
-            <div className="w-80 flex flex-col bg-white rounded-[2rem] shadow-sm p-6 dark:bg-gray-800">
+            <div className={clsx(
+                "w-full md:w-80 flex flex-col bg-white rounded-[2rem] shadow-sm p-6 dark:bg-gray-800",
+                view === "chat" ? "hidden md:flex" : "flex"
+            )}>
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Inbox</h2>
                     <button className="p-2 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
@@ -44,7 +53,7 @@ export default function InboxContent() {
                     {CONVERSATIONS.map(chat => (
                         <div
                             key={chat.id}
-                            onClick={() => setActiveChat(chat.id)}
+                            onClick={() => handleChatSelect(chat.id)}
                             className={clsx(
                                 "flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all",
                                 activeChat === chat.id
@@ -73,31 +82,40 @@ export default function InboxContent() {
             </div>
 
             {/* Chat View */}
-            <div className="flex-1 bg-white rounded-[2rem] shadow-sm flex flex-col overflow-hidden dark:bg-gray-800">
-                <div className="p-6 border-b border-gray-100 flex items-center justify-between dark:border-gray-700">
+            <div className={clsx(
+                "flex-1 bg-white rounded-[2rem] shadow-sm flex flex-col overflow-hidden dark:bg-gray-800",
+                view === "list" ? "hidden md:flex" : "flex"
+            )}>
+                <div className="p-4 md:p-6 border-b border-gray-100 flex items-center justify-between dark:border-gray-700">
                     <div className="flex items-center gap-4">
-                        <img src={CONVERSATIONS.find(c => c.id === activeChat)?.avatar} className="w-12 h-12 rounded-full object-cover" />
+                        <button
+                            onClick={() => setView("list")}
+                            className="md:hidden p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors dark:hover:bg-gray-700"
+                        >
+                            <ChevronLeft className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+                        </button>
+                        <img src={CONVERSATIONS.find(c => c.id === activeChat)?.avatar} className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover" />
                         <div>
-                            <h3 className="font-bold text-lg text-gray-900 dark:text-white">{CONVERSATIONS.find(c => c.id === activeChat)?.name}</h3>
-                            <p className="text-xs text-green-500 font-bold flex items-center gap-1">● Online</p>
+                            <h3 className="font-bold text-sm md:text-lg text-gray-900 dark:text-white">{CONVERSATIONS.find(c => c.id === activeChat)?.name}</h3>
+                            <p className="text-[10px] md:text-xs text-green-500 font-bold flex items-center gap-1">● Online</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <button className="p-3 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors text-gray-600 dark:bg-gray-700 dark:text-gray-300"><Phone className="w-5 h-5" /></button>
-                        <button className="p-3 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors text-gray-600 dark:bg-gray-700 dark:text-gray-300"><Video className="w-5 h-5" /></button>
-                        <button className="p-3 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors text-gray-600 dark:bg-gray-700 dark:text-gray-300"><MoreVertical className="w-5 h-5" /></button>
+                    <div className="flex items-center gap-1 md:gap-2">
+                        <button className="p-2 md:p-3 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors text-gray-600 dark:bg-gray-700 dark:text-gray-300"><Phone className="w-4 h-4 md:w-5 md:h-5" /></button>
+                        <button className="p-2 md:p-3 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors text-gray-600 dark:bg-gray-700 dark:text-gray-300"><Video className="w-4 h-4 md:w-5 md:h-5" /></button>
+                        <button className="p-2 md:p-3 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors text-gray-600 dark:bg-gray-700 dark:text-gray-300"><MoreVertical className="w-4 h-4 md:w-5 md:h-5" /></button>
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-gray-50/50 dark:bg-gray-900/50">
+                <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-4 md:space-y-6 bg-gray-50/50 dark:bg-gray-900/50">
                     {MESSAGES.map(msg => (
-                        <div key={msg.id} className={clsx("flex gap-4", msg.sender === 'me' ? "flex-row-reverse" : "")}>
+                        <div key={msg.id} className={clsx("flex gap-3 md:gap-4", msg.sender === 'me' ? "flex-row-reverse" : "")}>
                             <img
                                 src={msg.sender === 'me' ? "https://i.pravatar.cc/150?u=user" : CONVERSATIONS.find(c => c.id === activeChat)?.avatar}
-                                className="w-8 h-8 rounded-full object-cover mt-auto"
+                                className="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover mt-auto"
                             />
                             <div className={clsx(
-                                "max-w-[70%] p-4 rounded-2xl text-sm font-medium leading-relaxed",
+                                "max-w-[85%] md:max-w-[70%] p-3 md:p-4 rounded-2xl text-xs md:text-sm font-medium leading-relaxed",
                                 msg.sender === 'me'
                                     ? "bg-[#6C5DD3] text-white rounded-br-none"
                                     : "bg-white text-gray-700 rounded-bl-none shadow-sm dark:bg-gray-700 dark:text-gray-200"
@@ -108,17 +126,17 @@ export default function InboxContent() {
                     ))}
                 </div>
 
-                <div className="p-4 border-t border-gray-100 dark:border-gray-700">
+                <div className="p-3 md:p-4 border-t border-gray-100 dark:border-gray-700">
                     <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-2xl dark:bg-gray-700">
-                        <button className="p-2 text-gray-400 hover:text-[#6C5DD3] transition-colors"><Paperclip className="w-5 h-5" /></button>
+                        <button className="p-2 text-gray-400 hover:text-[#6C5DD3] transition-colors"><Paperclip className="w-4 h-4 md:w-5 md:h-5" /></button>
                         <input
                             type="text"
                             placeholder="Type your message..."
-                            className="flex-1 bg-transparent border-none focus:ring-0 text-sm font-medium text-gray-700 dark:text-white"
+                            className="flex-1 bg-transparent border-none focus:ring-0 text-xs md:text-sm font-medium text-gray-700 dark:text-white"
                         />
-                        <button className="p-2 text-gray-400 hover:text-[#6C5DD3] transition-colors"><Mic className="w-5 h-5" /></button>
-                        <button className="p-2 text-gray-400 hover:text-[#6C5DD3] transition-colors"><ImageIcon className="w-5 h-5" /></button>
-                        <button className="p-3 bg-[#6C5DD3] text-white rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all">
+                        <button className="hidden sm:block p-2 text-gray-400 hover:text-[#6C5DD3] transition-colors"><Mic className="w-5 h-5" /></button>
+                        <button className="hidden sm:block p-2 text-gray-400 hover:text-[#6C5DD3] transition-colors"><ImageIcon className="w-5 h-5" /></button>
+                        <button className="p-2 md:p-3 bg-[#6C5DD3] text-white rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all">
                             <Send className="w-4 h-4" />
                         </button>
                     </div>

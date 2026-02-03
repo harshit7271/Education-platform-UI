@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MessageCircle, Bell, Plus, UserPlus, UserCheck } from "lucide-react";
 import { BarChart, Bar, ResponsiveContainer, Cell, XAxis } from "recharts";
 import { STATS_DATA, MENTORS } from "@/lib/constants";
@@ -14,6 +14,11 @@ interface RightSidebarProps {
 
 export default function RightSidebar({ onChatClick, onNotificationClick, onProfileClick }: RightSidebarProps) {
     const [following, setFollowing] = useState<string[]>([]);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const toggleFollow = (name: string) => {
         setFollowing((prev) =>
@@ -97,33 +102,35 @@ export default function RightSidebar({ onChatClick, onNotificationClick, onProfi
             </div>
 
             {/* Chart Section */}
-            <div className="flex-1 flex flex-col mb-6">
+            <div className="flex-1 flex flex-col mb-6 min-w-0">
                 <h3 className="text-lg font-bold text-gray-900 mb-4 px-2 dark:text-white">Daily Activity</h3>
-                <div className="flex-1 min-h-[150px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={STATS_DATA} barSize={12}>
-                            <XAxis
-                                dataKey="day"
-                                axisLine={false}
-                                tickLine={false}
-                                tick={{ fill: '#9CA3AF', fontSize: 10 }}
-                                dy={10}
-                            />
-                            <Bar dataKey="value" radius={[10, 10, 10, 10]}>
-                                {STATS_DATA.map((entry, index) => (
-                                    <Cell
-                                        key={`cell-${index}`}
-                                        fill={entry.day === "Thu" ? "#4ADE80" : "#EBEBF0"} // Highlighted day light green
-                                        // Recharts doesn't support className on Cell for fill easily without custom shape. 
-                                        // We will accept light/dark mismatch here or assume chart is light-themed for contrast.
-                                        // Actually, let's make the "default" bars darker in dark mode? 
-                                        // Hard to do without passing context. Leaving as is, but maybe changing the specific hexes if I could.
-                                        className="hover:opacity-80 transition-opacity cursor-pointer dark:opacity-80"
-                                    />
-                                ))}
-                            </Bar>
-                        </BarChart>
-                    </ResponsiveContainer>
+                <div className="flex-1 min-h-[150px] w-full min-w-0">
+                    {isMounted && (
+                        <ResponsiveContainer width="100%" height={150} minWidth={0} minHeight={0}>
+                            <BarChart data={STATS_DATA} barSize={12}>
+                                <XAxis
+                                    dataKey="day"
+                                    axisLine={false}
+                                    tickLine={false}
+                                    tick={{ fill: '#9CA3AF', fontSize: 10 }}
+                                    dy={10}
+                                />
+                                <Bar dataKey="value" radius={[10, 10, 10, 10]}>
+                                    {STATS_DATA.map((entry, index) => (
+                                        <Cell
+                                            key={`cell-${index}`}
+                                            fill={entry.day === "Thu" ? "#4ADE80" : "#EBEBF0"} // Highlighted day light green
+                                            // Recharts doesn't support className on Cell for fill easily without custom shape. 
+                                            // We will accept light/dark mismatch here or assume chart is light-themed for contrast.
+                                            // Actually, let's make the "default" bars darker in dark mode? 
+                                            // Hard to do without passing context. Leaving as is, but maybe changing the specific hexes if I could.
+                                            className="hover:opacity-80 transition-opacity cursor-pointer dark:opacity-80"
+                                        />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    )}
                 </div>
             </div>
 
