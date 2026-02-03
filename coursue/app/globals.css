@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  
+  --color-primary: #6C5DD3;
+  --color-primary-light: #8B7DE8;
+  --color-background-soft: #F5F5F7;
+  
+  --radius-3xl: 1.5rem;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background-soft);
+    color: #171717;
+  }
+}
+
+/* Custom utilities if needed */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+}
